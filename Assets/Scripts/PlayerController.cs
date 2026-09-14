@@ -17,6 +17,14 @@ public class PlayerController : MonoBehaviour
     //Setter/Getters not effective in unity
     [SerializeField]
     private float movementSpeed;
+    [SerializeField]
+    private float jumpForce;
+
+    //how many player jumps can do
+    private int numJumps;
+    //max number of jumps a player can perform, so serialize it for easy edit
+    [SerializeField]
+    private int maxNumJumps;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -28,7 +36,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        movePlayerLateral();   
+        movePlayerLateral();
+        jump();
     }
     
     private void movePlayerLateral()
@@ -58,6 +67,15 @@ public class PlayerController : MonoBehaviour
         }    
     }
 
+    private void jump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && numJumps <= maxNumJumps)
+        {
+            player_rb.linearVelocity = new Vector2(player_rb.linearVelocityX, jumpForce);
+            numJumps++;
+        }
+    }
+
     //This is a prebuilt function that will detect collisions
     //in order to detect collisions both of the following must be true:
     //1. both objects need to have a collider
@@ -71,6 +89,23 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Restart Level");
             SceneManager.LoadScene("SampleScene");
+        }
+        else if(collision.gameObject.CompareTag("Ground"))
+        {
+            numJumps = 1;
+        }
+        else if(collision.gameObject.CompareTag("DoubleJump"))
+        {
+            maxNumJumps = 2;
+            Destroy(collision.gameObject);
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.CompareTag("DoubleJump"))
+        {
+            maxNumJumps = 2;
+            Destroy(collision.gameObject);
         }
     }
 }
