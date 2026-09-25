@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
     //max number of jumps a player can perform, so serialize it for easy edit
     [SerializeField]
     private int maxNumJumps;
+    //Where on the player hat is placed
+    public GameObject CollectableHatLocation;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -99,13 +101,35 @@ public class PlayerController : MonoBehaviour
             maxNumJumps = 2;
             Destroy(collision.gameObject);
         }
+        else if(collision.gameObject.CompareTag("SuperSpeed"))
+        {
+            movementSpeed = movementSpeed * 2;
+            Destroy(collision.gameObject);
+        }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.CompareTag("DoubleJump"))
         {
             maxNumJumps = 2;
-            Destroy(collision.gameObject);
+            GameObject hat = collision.gameObject;
+            equipCollectableHat(hat);
+            //No need to destroy when equipping it;
+            //Destroy(collision.gameObject);
         }
+        else if(collision.gameObject.CompareTag("SuperSpeed"))
+        {
+            movementSpeed *= 2;
+            GameObject hat = collision.gameObject;
+            equipCollectableHat(hat);
+        }
+    }
+    // Equipping Collectables Function
+    private void equipCollectableHat(GameObject hat)
+    {
+        //When player collides to the collectable, set the Player as parent, and put the item at location
+        hat.transform.position = CollectableHatLocation.transform.position;
+        //Must parent the object to the Player for movement / rendering;
+        hat.gameObject.transform.SetParent(this.gameObject.transform);
     }
 }
