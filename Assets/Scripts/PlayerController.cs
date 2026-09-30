@@ -6,7 +6,7 @@
 //==================================================
 
 using UnityEngine;
-//This is required for loading a sceen
+//This is required for loading a scene
 using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
