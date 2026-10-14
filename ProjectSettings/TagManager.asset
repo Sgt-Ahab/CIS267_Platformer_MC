@@ -10,6 +10,7 @@ TagManager:
   - MoveWallLeftBound
   - MoveWallRightBound
   - SuperSpeed
+  - GameManager
   layers:
   - Default
   - TransparentFX

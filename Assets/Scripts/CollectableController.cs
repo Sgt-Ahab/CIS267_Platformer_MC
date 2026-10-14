@@ -5,10 +5,20 @@ public class CollectableController : MonoBehaviour
     [SerializeField]
     private float speed;
     private Rigidbody2D rb;
+
+    private GameObject player;
+    private GameObject gameManager;
+    private PlayerScore playerScoreScript;
+    private CollectableData collectableData;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        player = GameObject.FindGameObjectWithTag("Player");
+        gameManager = GameObject.FindGameObjectWithTag("GameManager");
+        playerScoreScript = gameManager.GetComponent<PlayerScore>();
+        collectableData = GetComponent<CollectableData>();
         setRandomSpeed();
     }
 
@@ -31,6 +41,11 @@ public class CollectableController : MonoBehaviour
     {
         if (collision.CompareTag("OB"))
         {
+            Destroy(this.gameObject);
+        }
+        else if(collision.CompareTag("Player"))
+        {
+            playerScoreScript.setPlayerScore(collectableData.getCollectableValue());
             Destroy(this.gameObject);
         }
     }
